@@ -147,14 +147,34 @@ public class TemplateEngineTest {
     @Test
     public void Spec7(){
     	// Shorter templates are processed first
-    	map.store("name", "Adam", true);
-        map.store("sur Brown", "Dykes", true);
-        map.store("type","Brown", false);
-        //map.store(pattern, value, caseSensitive);
-        String result = engine.evaluate("Hello ${name} ${sur ${type}}", map,"keep-unmatched");
-    	assertEquals("Hello Adam Dykes",result); 
+    	// Template order:
+    	//		1. ${n}
+    	//		2.${sur${n} (left-right)
+    	//		3.${bur${n}} (left-right)
+    	//
+    	// n - gets replaced first with ns
+    	//
+    	// News Templates:
+    	//		1. ${surns} (left-right)
+    	//		2. ${burns} (left-right)
+    	// 
+    	// surns - gets replaced with Jameson
+    	// burns - gets replaced with Browns
+    	//
+    	// If it was any other order (left-right or big-small) sur would get
+    	// replaced first with Smith and the new template to be matched would
+    	// have to be Smithns. Which proves that the order is small to big.
     	
+        map.store("surns","Jameson",false);
+        map.store("sur","Smith",false);
+        map.store("bur","Brown", false);
+        map.store("buns","Browns", false);
+        map.store("n","ns", false);
+
+        String result = engine.evaluate("Hello ${sur${n}} ${bu${n}}", map,"delete-unmatched");
+    	assertEquals("Hello Jameson Browns",result); 
     }
+   
     
     // Spec 8
     @Test
@@ -180,6 +200,12 @@ public class TemplateEngineTest {
         //map.store(pattern, value, caseSensitive);
         String result = engine.evaluate("Hello ${name} ${sur ${type}} ${type} ${tt}", map,"delete-unmatched");
     	assertEquals("Hello Adam Dykes Brown ",result); 
+    	
+    }
+    
+    // Spec EMpty
+    @Test
+    public void SpecEmpty(){
     	
     }
 }
