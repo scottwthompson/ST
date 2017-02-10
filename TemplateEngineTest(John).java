@@ -135,10 +135,11 @@ public class TemplateEngineTest {
     public void Spec6(){
     	// Nested ${${}} check
     	map.store("name", "Adam", true);
-        map.store("Name ${type}", "Dykes", true);
-        map.store("type","Brown", false);
-        String result = engine.evaluate("Hello ${name} ${Name ${type}}", map,"keep-unmatched");
-    	assertEquals("Hello Adam ${Name ${type}}",result); 
+        map.store("sur Brown orange name", "Dykes", true);
+        map.store("colour2","orange", false);
+        map.store("colour","Brown", false);
+        String result = engine.evaluate("Hello ${name} ${sur ${colour} ${colour2} name}", map,"keep-unmatched");
+    	assertEquals("Hello Adam Dykes",result); 
     	
     }
     
@@ -147,7 +148,7 @@ public class TemplateEngineTest {
     public void Spec7(){
     	// Shorter templates are processed first
     	map.store("name", "Adam", true);
-        map.store("N${type}", "Dykes", true);
+        map.store("N ${type}", "Dykes", true);
         map.store("type","Brown", false);
         String result = engine.evaluate("Hello ${name} ${N ${type}}", map,"keep-unmatched");
     	assertEquals("Hello Adam ${N${type}}",result); 
