@@ -121,7 +121,7 @@ public class TemplateEngineTest {
     
     // Spec 5
     @Test
-    public void Spec5(){
+    public void Spec5IgnoreNonChar(){
     	// ${middle name} = ${middlename}
     	map.store("name", "Adam", true);
         map.store("Name suname", "Dykes", false);
@@ -148,24 +148,38 @@ public class TemplateEngineTest {
     public void Spec7(){
     	// Shorter templates are processed first
     	map.store("name", "Adam", true);
-        map.store("N ${type}", "Dykes", true);
+        map.store("sur Brown", "Dykes", true);
         map.store("type","Brown", false);
-        String result = engine.evaluate("Hello ${name} ${N ${type}}", map,"keep-unmatched");
-    	assertEquals("Hello Adam ${N${type}}",result); 
+        //map.store(pattern, value, caseSensitive);
+        String result = engine.evaluate("Hello ${name} ${sur ${type}}", map,"keep-unmatched");
+    	assertEquals("Hello Adam Dykes",result); 
     	
     }
     
     // Spec 8
     @Test
-    public void Spec8(){
-    	// Engine processes one templrate at a time and attempts to match it againt the keys of the entry map
+    public void Spec8KeepUnmatched(){
+    	// Engine processes one template at a time and attempts to match it against the keys of the entry map
     	// until there is a match or the entry list is exhausted
+    	map.store("name", "Adam", true);
+        map.store("sur Brown", "Dykes", true);
+        map.store("type","Brown", false);
+        //map.store(pattern, value, caseSensitive);
+        String result = engine.evaluate("Hello ${name} ${sur ${type}} ${type} ${tt}", map,"keep-unmatched");
+    	assertEquals("Hello Adam Dykes Brown ${tt}",result); 
     	
     }
     
-    // Spec EMpty
     @Test
-    public void SpecEmpty(){
+    public void Spec8DeleteUnmatched(){
+    	// Engine processes one template at a time and attempts to match it against the keys of the entry map
+    	// until there is a match or the entry list is exhausted
+    	map.store("name", "Adam", true);
+        map.store("sur Brown", "Dykes", true);
+        map.store("type","Brown", false);
+        //map.store(pattern, value, caseSensitive);
+        String result = engine.evaluate("Hello ${name} ${sur ${type}} ${type} ${tt}", map,"delete-unmatched");
+    	assertEquals("Hello Adam Dykes Brown ",result); 
     	
     }
 }
