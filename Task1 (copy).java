@@ -7,8 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import st.EntryMap;
 import st.TemplateEngine;
+import st.EntryMap;
+import st.TemplateEngine;
 
-public class Task1 {
+public class Task2 {
 	
     private EntryMap map;
 
@@ -59,6 +61,13 @@ public class Task1 {
 	    public void TestNullFlag() {
 	        map.store("name", "Adam", null);
 	        map.store("surname", "Dykes", null);
+	        String result = engine.evaluate("Hello ${NaMe} ${SuRnAmE}", map,"delete-unmatched");
+	        assertEquals("Hello Adam Dykes", result);
+	    }
+	 @Test
+	    public void TestOptionalFlag() {
+	        map.store("name", "Adam");
+	        map.store("surname", "Dykes");
 	        String result = engine.evaluate("Hello ${NaMe} ${SuRnAmE}", map,"delete-unmatched");
 	        assertEquals("Hello Adam Dykes", result);
 	    }
@@ -289,25 +298,8 @@ public class Task1 {
 	        map.store("type","Brown", false);
 	        String result = engine.evaluate("Hello ${name} ${sur ${type}} ${type} ${tt}", map,"delete-unmatched");
 	    	assertEquals("Hello Adam Dykes Brown ",result); 
+	    	
 	    }
-	    
-	    
-	    
-	    //Additional Tests for extra coverage
-
-	    //Testing equals for TemplateEngine
-	    
-	    @Test
-	    public void twoequalTemplates(){
-	    	TemplateEngine.Template a = new TemplateEngine()
-	        String result = engine.evaluate("Hello ${name} ${sur ${type}} ${type} ${tt}", map,"delete-unmatched");
-	    	assertEquals("Hello Adam Dykes Brown ",result); 
-	    }
-	    
-	    
-	    
-	    
-	    
 }
 	    
 	    

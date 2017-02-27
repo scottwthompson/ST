@@ -1,3 +1,5 @@
+package st;
+
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import st.EntryMap;
 import st.TemplateEngine;
+
 
 public class Task1 {
 	
@@ -289,23 +292,196 @@ public class Task1 {
 	        map.store("type","Brown", false);
 	        String result = engine.evaluate("Hello ${name} ${sur ${type}} ${type} ${tt}", map,"delete-unmatched");
 	    	assertEquals("Hello Adam Dykes Brown ",result); 
+	    	
 	    }
 	    
 	    
 	    
 	    //Additional Tests for extra coverage
-
-	    //Testing equals for TemplateEngine
+	    
+	    //tests for equals on template engine.
 	    
 	    @Test
 	    public void twoequalTemplates(){
-	    	TemplateEngine.Template a = new TemplateEngine()
-	        String result = engine.evaluate("Hello ${name} ${sur ${type}} ${type} ${tt}", map,"delete-unmatched");
-	    	assertEquals("Hello Adam Dykes Brown ",result); 
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	Boolean result = a.equals(a);
+	    	assertEquals(true,result); 
+	    }
+	    
+	    @Test
+	    public void nulltwo(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	Boolean result = a.equals(null);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    
+	    @Test
+	    public void twoUnequalTemplates(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	TemplateEngine.Template b = engine.new Template(null,10,null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoUnequalTemplates2(){
+	    	TemplateEngine.Template a = engine.new Template(null,10,null);
+	    	TemplateEngine.Template b = engine.new Template(null,null,null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoUnequalTemplates3(){
+	    	TemplateEngine.Template a = engine.new Template(10,10,null);
+	    	TemplateEngine.Template b = engine.new Template(10,null,null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoUnequalTemplates4(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	TemplateEngine.Template b = engine.new Template(10,null,null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoequalTemplates5(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	TemplateEngine.Template b = engine.new Template(null,null,null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(true,result); 
+	    }
+	    
+	    @Test
+	    public void twoequalTemplates6(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,"hey");
+	    	TemplateEngine.Template b = engine.new Template(null,null,"hey");
+	    	Boolean result = a.equals(b);
+	    	assertEquals(true,result); 
+	    }
+	    
+	    @Test
+	    public void twounequalTemplates7(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	TemplateEngine.Template b = engine.new Template(null,null,"hey");
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoequalTemplates8(){
+	    	TemplateEngine.Template a = engine.new Template(null,5,null);
+	    	TemplateEngine.Template b = engine.new Template(null,5,null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(true,result); 
+	    }
+	    
+	    @Test
+	    public void twoUnequalIndices(){
+	    	TemplateEngine.Template a = engine.new Template(5,null,null);
+	    	TemplateEngine.Template b = engine.new Template(15,null,null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void oneTemplateCompNontemplate(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	String b = "hello";
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    
+	    //Entry map equals
+	    
+	    @Test
+	    public void twoequalEntrys(){
+	    	EntryMap.Entry a = map.new Entry("hey","adam",null);
+	    	Boolean result = a.equals(a);
+	    	assertEquals(true,result); 
+	    }
+	    
+	    @Test
+	    public void nulltwoEntrys(){
+	    	EntryMap.Entry a = map.new Entry(null,null,null);
+	    	Boolean result = a.equals(null);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    
+	    @Test
+	    public void twoUnequalEntrys(){
+	    	EntryMap.Entry a = map.new Entry("hey","adam",null);
+	    	EntryMap.Entry b = map.new Entry("hey","bob",null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoUnequalEntrys2(){
+	    	EntryMap.Entry a = map.new Entry("heythere","bob",null);
+	    	EntryMap.Entry b = map.new Entry("hey","bob",null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoUnequalEntrys3(){
+	    	EntryMap.Entry a = map.new Entry("hey","bob",null);
+	    	EntryMap.Entry b = map.new Entry("hey","bob",true);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void twoUnequalEntrys4(){
+	    	EntryMap.Entry a = map.new Entry("hey","bob",null);
+	    	EntryMap.Entry b = map.new Entry("hey","bob",null);
+	    	Boolean result = a.equals(b);
+	    	assertEquals(true,result); 
+	    }
+	    
+	    
+	    @Test
+	    public void oneEntryCompNonEntry(){
+	    	EntryMap.Entry a = map.new Entry("heythere","bob",null);
+	    	String b = "hello";
+	    	Boolean result = a.equals(b);
+	    	assertEquals(false,result); 
 	    }
 	    
 	    
 	    
+	    //tests for hashcode
+	    
+	    @Test
+	    public void hashcodetest(){
+	    	TemplateEngine.Template a = engine.new Template(null,null,null);
+	    	int x = a.hashCode();
+	    	Boolean result = x==0;
+	    	assertEquals(true,result); 
+	    }
+	    
+	    @Test
+	    public void hashcodetest2(){
+	    	EntryMap.Entry a = map.new Entry("hey","adam",null);
+	    	int x = a.hashCode();
+	    	Boolean result = x==0;
+	    	assertEquals(false,result); 
+	    }
+	    
+	    @Test
+	    public void gettemplatesreplaced(){
+	    	TemplateEngine.Result a = engine.new Result(null,5);
+	    	int x = a.getTemplatesReplaced();
+	    	Boolean result = x==5;
+	    	assertEquals(true,result); 
+	    }
 	    
 	    
 }
