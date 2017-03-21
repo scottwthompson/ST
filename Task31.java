@@ -576,30 +576,37 @@ public class Task31 {
 	        String result = engine.evaluate("Hello ${name} ${sur} ${type${blah}}", map,"optimization");
 	    	assertEquals(expectedResult,result); 
 	    }
-	    
+	       
 	    @Test
-	    public void nonReplaceableTemplates(){
-	    	// When having nested templates you have to take into account to have as 
-	    	// templates not name but Name Dykes for the value to be replaced. If however 
-	    	// 
+	    public void templateAsPartOfString(){
 	    	map.store("name", "Adam", true);
-	        map.store("sur", "Dykes", true);
+	        map.store("sur ${type}", "Dykes", true);
 	        map.store("type","Brown", false);
-	        String expectedResult = engine.evaluate("Hello ${name} ${sur} ${type${}}", map,"delete-unmatched");
-	        String result = engine.evaluate("Hello ${name} ${sur} ${type${}}", map,"optimization");
+	        String expectedResult = engine.evaluate("Hello ${name} ${sur ${type}}", map,"keep-unmatched");
+	        String result = engine.evaluate("Hello ${name} ${sur ${type}}", map,"optimization");
 	    	assertEquals(expectedResult,result); 
 	    }
 	    
 	    @Test
-	    public void templateAsPartOfString(){
-	    	// Engine processes one template at a time and attempts to match it against the keys of the entry map
-	    	// until there is a match or the entry list is exhausted
+	    public void templateCharAsPartOfString2(){
+	    	// Both produce the same -> Default in keep unmatched
 	    	map.store("name", "Adam", true);
-	        map.store("sur ${type}", "Dykes", true);
-	        map.store("types","Brown", false);
-	        String expectedResult = engine.evaluate("Hello ${name} ${sur ${type}}", map,"keep-unmatched");
-	        String result = engine.evaluate("Hello ${name} ${sur ${type}}", map,"optimization");
-	    	assertEquals("Hello Adam Dykes",result); 
+	        map.store("sur$", "Dykes", true);
+	        map.store("type","Brown", false);
+	        String expectedResult = engine.evaluate("Hello ${name} ${sur$}", map,"keep-unmatched");
+	        String result = engine.evaluate("Hello ${name} ${sur$}", map,"optimization");
+	    	assertEquals(expectedResult,result); 
+	    }
+	    
+	    @Test
+	    public void templateCharAsPartOfString3(){
+	    	// First ${sur is part of string and keep unmatched produces more templates
+	    	// keep-unmatched selected
+	    	map.store("name", "Adam", true);
+	        map.store("sur", "Dykes", true);
+	        map.store("type","Brown", false);
+	        String expectedResult = engine.evaluate("Hello ${name} ${sur ${sur}}", map,"keep-unmatched");
+	        String result = engine.evaluate("Hello ${name} ${sur$}", map,"optimization");
 	    	assertEquals(expectedResult,result); 
 	    }
 
